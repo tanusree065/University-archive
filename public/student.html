@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard - Project Archive</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+  <!-- Navigation Bar container -->
+  <div id="navbar-container"></div>
+
+  <!-- Dashboard Content -->
+  <main class="max-w-7xl w-full mx-auto px-6 py-10 flex-grow grid grid-cols-1 lg:grid-cols-3 gap-8">
+    
+    <!-- Upload Project Column -->
+    <section class="lg:col-span-1">
+      <div class="glass-panel p-6 rounded-2xl bg-slate-900/50 relative border-white/5">
+        <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+          📤 Submit New Project
+        </h2>
+        
+        <form id="upload-form" class="space-y-4">
+          <div>
+            <label for="title" class="block text-xs font-semibold text-gray-400 mb-1.5 uppercase tracking-wide">Project Title</label>
+            <input 
+              type="text" 
+              id="title" 
+              required 
+              placeholder="e.g. Smart Campus Navigation System"
+              class="w-full px-3 py-2.5 rounded-lg custom-input text-xs"
+            >
+          </div>
+
+          <div>
+            <label for="description" class="block text-xs font-semibold text-gray-400 mb-1.5 uppercase tracking-wide">Description / Abstract</label>
+            <textarea 
+              id="description" 
+              required 
+              rows="4"
+              placeholder="Describe the research objective, methodology, and outcome..."
+              class="w-full px-3 py-2.5 rounded-lg custom-input text-xs"
+            ></textarea>
+          </div>
+
+          <div>
+            <label for="technology" class="block text-xs font-semibold text-gray-400 mb-1.5 uppercase tracking-wide">Technologies (comma-separated)</label>
+            <input 
+              type="text" 
+              id="technology" 
+              required 
+              placeholder="e.g. Node.js, Mongoose, Express, JWT"
+              class="w-full px-3 py-2.5 rounded-lg custom-input text-xs"
+            >
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="department" class="block text-xs font-semibold text-gray-400 mb-1.5 uppercase tracking-wide">Department</label>
+              <select id="department" required class="w-full px-3 py-2.5 rounded-lg custom-input text-xs bg-slate-800 border-white/5">
+                <option value="Computer Science">Computer Science</option>
+                <option value="Electrical Engineering">Electrical Engineering</option>
+                <option value="Mechanical Engineering">Mechanical Engineering</option>
+                <option value="Civil Engineering">Civil Engineering</option>
+                <option value="Information Technology">Information Technology</option>
+              </select>
+            </div>
+            <div>
+              <label for="batch" class="block text-xs font-semibold text-gray-400 mb-1.5 uppercase tracking-wide">Batch Code</label>
+              <input 
+                type="text" 
+                id="batch" 
+                required 
+                placeholder="e.g. 2022"
+                class="w-full px-3 py-2.5 rounded-lg custom-input text-xs"
+              >
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="year" class="block text-xs font-semibold text-gray-400 mb-1.5 uppercase tracking-wide">Academic Year</label>
+              <select id="year" required class="w-full px-3 py-2.5 rounded-lg custom-input text-xs bg-slate-800 border-white/5">
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year">3rd Year</option>
+                <option value="4th Year">4th Year</option>
+                <option value="Postgraduate">Postgraduate</option>
+              </select>
+            </div>
+            <div>
+              <label for="githubLink" class="block text-xs font-semibold text-gray-400 mb-1.5 uppercase tracking-wide">GitHub Repository Link</label>
+              <input 
+                type="url" 
+                id="githubLink" 
+                placeholder="https://github.com/..."
+                class="w-full px-3 py-2.5 rounded-lg custom-input text-xs"
+              >
+            </div>
+          </div>
+
+          <button 
+            type="submit" 
+            class="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-lg transition-all duration-200 mt-2 shadow-lg shadow-indigo-600/20 text-xs"
+          >
+            Submit Archive Entry
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Submissions Column -->
+    <section class="lg:col-span-2 flex flex-col">
+      <div class="glass-panel p-6 rounded-2xl bg-slate-900/50 border-white/5 flex-grow">
+        <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+          📑 My Submissions
+        </h2>
+
+        <!-- Loading submissions -->
+        <div id="submissions-loading" class="hidden text-center py-12">
+          <div class="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+          <span class="text-xs text-gray-400">Loading your submissions...</span>
+        </div>
+
+        <!-- Empty submissions -->
+        <div id="submissions-empty" class="hidden text-center py-16 border border-dashed border-white/5 rounded-xl">
+          <p class="text-gray-400 text-sm mb-1">No uploads found.</p>
+          <p class="text-xs text-gray-600">Submit a project using the form on the left to get started.</p>
+        </div>
+
+        <!-- Submissions Grid/List -->
+        <div id="submissions-list" class="space-y-4">
+          <!-- Submission items injected dynamically -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-6 border-t border-white/5 text-center text-xs text-gray-500">
+    <p>&copy; 2026 University Research & Project Archive. All rights reserved.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/js/api.js"></script>
+  <script src="/js/ui.js"></script>
+  <script src="/js/student.js"></script>
+</body>
+</html>
