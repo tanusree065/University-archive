@@ -67,7 +67,7 @@ const ProjectSchema = new mongoose.Schema({
   }
 });
 
-// Compound Text Index for search functionality across title and description
+
 ProjectSchema.index({ title: 'text', description: 'text' });
 
 module.exports = mongoose.model('Project', ProjectSchema);

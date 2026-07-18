@@ -1,7 +1,7 @@
 const Project = require('../models/Project');
 const jwt = require('jsonwebtoken');
 
-// Helper to determine user role if token exists (optional authentication)
+
 const getOptionalUser = (req) => {
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     try {
@@ -9,47 +9,43 @@ const getOptionalUser = (req) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET || 'super_secret_key_123_university_archive');
       return decoded;
     } catch (err) {
-      // Ignore token validation failure and treat as guest
+      
       return null;
     }
   }
   return null;
 };
 
-// @desc    Get all projects (with search & filtering)
-// @route   GET /api/archive/documents
-// @access  Public (Optional Auth for teacher visibility)
+
 exports.getProjects = async (req, res, next) => {
   try {
     const { search, department, technology } = req.query;
     const query = {};
 
-    // 1. Role-based Visibility
-    // Students and guests should only see Reviewed projects.
-    // Teachers should see all projects (Pending + Reviewed).
+    
     const user = getOptionalUser(req);
     if (!user) {
       query.status = 'Reviewed';
     } else if (user.role === 'student') {
-      // Students see reviewed projects OR their own uploaded projects (even pending ones)
+      
       query.$or = [
         { status: 'Reviewed' },
         { uploadedBy: user.id }
       ];
     }
 
-    // 2. Department Filter
+    
     if (department) {
       query.department = department;
     }
 
-    // 3. Technology Filter
+    
     if (technology) {
-      // Matches case-insensitive exact tag or partial
+      
       query.technology = { $in: [new RegExp(`^${technology}$`, 'i')] };
     }
 
-    // 4. Text Search (matches title or description)
+    
     if (search) {
       query.$or = [
         { title: { $regex: search, $options: 'i' } },
@@ -57,7 +53,7 @@ exports.getProjects = async (req, res, next) => {
       ];
     }
 
-    // Fetch and populate uploader information (omitting password)
+    
     const projects = await Project.find(query)
       .populate('uploadedBy', 'name email department')
       .sort({ uploadDate: -1 });
@@ -72,9 +68,8 @@ exports.getProjects = async (req, res, next) => {
   }
 };
 
-// @desc    Get single project by ID
-// @route   GET /api/archive/document/:id
-// @access  Public
+
+
 exports.getProjectById = async (req, res, next) => {
   try {
     const project = await Project.findById(req.params.id)
@@ -87,11 +82,11 @@ exports.getProjectById = async (req, res, next) => {
       });
     }
 
-    // Access control: only teachers can view pending projects
+    
     if (project.status === 'Pending') {
       const user = getOptionalUser(req);
       if (!user || user.role !== 'teacher') {
-        // If the uploader is requesting their own pending project, allow it
+        
         if (!user || user.id !== project.uploadedBy._id.toString()) {
           return res.status(403).json({
             success: false,
@@ -110,14 +105,12 @@ exports.getProjectById = async (req, res, next) => {
   }
 };
 
-// @desc    Upload project
-// @route   POST /api/archive/upload
-// @access  Private (Student only)
+
 exports.uploadProject = async (req, res, next) => {
   try {
     const { title, description, technology, department, batch, year, githubLink } = req.body;
 
-    // Split technologies by comma if passed as string, and trim
+    
     let techArray = [];
     if (Array.isArray(technology)) {
       techArray = technology;
@@ -134,7 +127,7 @@ exports.uploadProject = async (req, res, next) => {
       year,
       githubLink: githubLink || '',
       uploadedBy: req.user.id,
-      status: 'Pending' // Explicitly set to Pending
+      status: 'Pending' 
     });
 
     res.status(201).json({
@@ -147,9 +140,7 @@ exports.uploadProject = async (req, res, next) => {
   }
 };
 
-// @desc    Review project (grade and comment)
-// @route   PUT /api/archive/review/:id
-// @access  Private (Teacher only)
+
 exports.reviewProject = async (req, res, next) => {
   try {
     const { marks, teacherComment } = req.body;
@@ -194,9 +185,7 @@ exports.reviewProject = async (req, res, next) => {
   }
 };
 
-// @desc    Delete project
-// @route   DELETE /api/archive/:id
-// @access  Private (Teacher only)
+
 exports.deleteProject = async (req, res, next) => {
   try {
     const project = await Project.findById(req.params.id);
@@ -219,23 +208,21 @@ exports.deleteProject = async (req, res, next) => {
   }
 };
 
-// @desc    Get all students who have submitted a project
-// @route   GET /api/archive/students
-// @access  Private (Teacher only)
+
 exports.getSubmittedStudents = async (req, res, next) => {
   try {
     const User = require('../models/User');
 
-    // Find unique uploadedBy user IDs from projects
+    
     const studentIds = await Project.distinct('uploadedBy');
 
-    // Find users with these IDs who are students
+    
     const students = await User.find({
       _id: { $in: studentIds },
       role: 'student'
     }).select('name email department');
 
-    // Add submission count to each student
+    
     const studentsWithCount = await Promise.all(
       students.map(async (student) => {
         const count = await Project.countDocuments({ uploadedBy: student._id });

@@ -3,22 +3,20 @@ const { body, validationResult } = require('express-validator');
 const { register, login } = require('../controllers/authController');
 const router = express.Router();
 
-// Middleware to handle validation results
+
 const validate = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({
       success: false,
-      message: errors.array()[0].msg, // Return the first error message
+      message: errors.array()[0].msg, 
       errors: errors.array()
     });
   }
   next();
 };
 
-// @route   POST /api/auth/register
-// @desc    Register user
-// @access  Public
+
 router.post(
   '/register',
   [
@@ -32,9 +30,7 @@ router.post(
   register
 );
 
-// @route   POST /api/auth/login
-// @desc    Login user & get token
-// @access  Public
+
 router.post(
   '/login',
   [

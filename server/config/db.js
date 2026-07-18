@@ -4,7 +4,7 @@ const connectDB = async () => {
   const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/university-archive';
   try {
     console.log(`Connecting to Local MongoDB at ${uri}...`);
-    // Attempt local connection with a 2-second timeout
+    
     const conn = await mongoose.connect(uri, {
       serverSelectionTimeoutMS: 2000
     });
@@ -14,7 +14,7 @@ const connectDB = async () => {
     console.log('Attempting to launch in-memory MongoDB server fallback...');
     
     try {
-      // Dynamically require mongodb-memory-server (it should be installed by now)
+      
       const { MongoMemoryServer } = require('mongodb-memory-server');
       const mongoMS = await MongoMemoryServer.create();
       const memoryUri = mongoMS.getUri();

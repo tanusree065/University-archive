@@ -1,20 +1,19 @@
 const jwt = require('jsonwebtoken');
 
-// Protect routes - verify JWT token
+
 const protect = async (req, res, next) => {
   let token;
 
-  // Check for token in Authorization header
+  
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     try {
-      // Get token from header
+      
       token = req.headers.authorization.split(' ')[1];
 
-      // Verify token
+     
       const decoded = jwt.verify(token, process.env.JWT_SECRET || 'super_secret_key_123_university_archive');
 
-      // Add user info from token payload to request object
-      // Payload contains { id, role, name, email }
+      
       req.user = decoded;
 
       next();
@@ -35,7 +34,7 @@ const protect = async (req, res, next) => {
   }
 };
 
-// Authorize roles
+
 const authorize = (...roles) => {
   return (req, res, next) => {
     if (!req.user || !roles.includes(req.user.role)) {

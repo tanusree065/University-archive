@@ -25,7 +25,7 @@ const UserSchema = new mongoose.Schema({
   department: {
     type: String,
     trim: true,
-    // department is required for student and teacher roles, which we will validate at runtime
+    
   },
   createdAt: {
     type: Date,

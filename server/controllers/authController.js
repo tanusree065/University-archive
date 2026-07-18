@@ -2,7 +2,7 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-// Helper to generate JWT Token
+
 const generateToken = (user) => {
   return jwt.sign(
     {
@@ -16,15 +16,10 @@ const generateToken = (user) => {
     { expiresIn: '24h' }
   );
 };
-
-// @desc    Register a new user
-// @route   POST /api/auth/register
-// @access  Public
 exports.register = async (req, res, next) => {
   try {
     const { name, email, password, role, department } = req.body;
 
-    // Validation
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
@@ -32,7 +27,7 @@ exports.register = async (req, res, next) => {
       });
     }
 
-    // Role check
+  
     const userRole = role || 'guest';
     if (!['student', 'teacher', 'guest'].includes(userRole)) {
       return res.status(400).json({
@@ -41,7 +36,7 @@ exports.register = async (req, res, next) => {
       });
     }
 
-    // Department validation
+    
     if (['student', 'teacher'].includes(userRole) && !department) {
       return res.status(400).json({
         success: false,
@@ -49,7 +44,7 @@ exports.register = async (req, res, next) => {
       });
     }
 
-    // Check if user exists
+    
     const userExists = await User.findOne({ email: email.toLowerCase() });
     if (userExists) {
       return res.status(400).json({
@@ -58,11 +53,11 @@ exports.register = async (req, res, next) => {
       });
     }
 
-    // Hash password
+    
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create user
+    
     const user = await User.create({
       name,
       email: email.toLowerCase(),
@@ -71,7 +66,7 @@ exports.register = async (req, res, next) => {
       department: userRole === 'guest' ? undefined : department
     });
 
-    // Generate JWT
+    
     const token = generateToken(user);
 
     res.status(201).json({
@@ -90,14 +85,12 @@ exports.register = async (req, res, next) => {
   }
 };
 
-// @desc    Auth user & get token
-// @route   POST /api/auth/login
-// @access  Public
+
 exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    // Validation
+    
     if (!email || !password) {
       return res.status(400).json({
         success: false,
@@ -105,7 +98,7 @@ exports.login = async (req, res, next) => {
       });
     }
 
-    // Check for user
+    
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
       return res.status(401).json({
@@ -114,7 +107,7 @@ exports.login = async (req, res, next) => {
       });
     }
 
-    // Check password match
+    
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({
@@ -123,7 +116,7 @@ exports.login = async (req, res, next) => {
       });
     }
 
-    // Generate JWT
+    
     const token = generateToken(user);
 
     res.status(200).json({
