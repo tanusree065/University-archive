@@ -4,27 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Teacher Dashboard - Project Archive</title>
-  <!-- Tailwind CSS CDN -->
+  
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Custom CSS -->
+  
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-  <!-- Navigation Bar container -->
+  
   <div id="navbar-container"></div>
 
-  <!-- Main Dashboard Panel -->
+  
   <main class="max-w-7xl w-full mx-auto px-6 py-10 flex-grow">
     
-    <!-- Header Banner -->
+    
     <header class="mb-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div>
         <h1 class="text-3xl font-extrabold text-white tracking-tight">Faculty Assessment Dashboard</h1>
         <p class="text-sm text-gray-400">Evaluate student project archives, assign marks, and provide constructive feedback.</p>
       </div>
       
-      <!-- Quick Info Stats -->
+      
       <div class="flex gap-4">
         <div class="glass-panel px-5 py-3 rounded-xl bg-slate-900/60 border-white/5 text-center min-w-[120px]">
           <span class="block text-[10px] uppercase font-bold text-gray-500 tracking-wider">Pending</span>
@@ -37,7 +37,7 @@
       </div>
     </header>
 
-    <!-- Tab Selection Navigation -->
+    
     <nav class="flex border-b border-white/5 mb-8">
       <button 
         id="tab-pending" 
@@ -59,34 +59,34 @@
       </button>
     </nav>
 
-    <!-- Dashboard Content Queue -->
+    
     <section class="glass-panel p-6 rounded-2xl bg-slate-900/50 border-white/5">
       
-      <!-- Loader indicator -->
+      
       <div id="queue-loading" class="hidden text-center py-20">
         <div class="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
         <p class="text-gray-400 text-sm">Fetching document queue...</p>
       </div>
 
-      <!-- Empty Queue View -->
+      
       <div id="queue-empty" class="hidden text-center py-20">
         <div class="text-5xl mb-4">🎉</div>
         <h3 class="text-xl font-bold text-white mb-2" id="empty-title">Queue is Empty</h3>
         <p class="text-gray-400 max-w-md mx-auto text-sm" id="empty-subtitle">All student uploads have been assessed. Good job!</p>
       </div>
 
-      <!-- Projects Lists -->
+      
       <div id="projects-queue" class="space-y-6">
-        <!-- Dashboard list elements injected dynamically -->
+        
       </div>
 
     </section>
   </main>
 
-  <!-- Review Evaluation Modal -->
+  
   <div id="review-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm px-4 hidden transition-all duration-300">
     <div class="w-full max-w-xl glass-panel bg-slate-900/95 rounded-2xl border-white/10 overflow-hidden">
-      <!-- Modal Header -->
+      
       <div class="p-6 border-b border-white/5 bg-slate-900/50 flex justify-between items-center">
         <h3 class="text-lg font-bold text-white">Evaluate Project Entry</h3>
         <button onclick="closeReviewModal()" class="text-gray-400 hover:text-white transition-colors text-xl">✕</button>
@@ -143,14 +143,16 @@
     </div>
   </div>
 
-  <!-- Footer -->
+  
   <footer class="py-6 border-t border-white/5 text-center text-xs text-gray-500">
     <p>&copy; 2026 University Research & Project Archive. All rights reserved.</p>
   </footer>
 
-  <!-- Scripts -->
+  
   <script src="/js/api.js"></script>
   <script src="/js/ui.js"></script>
   <script src="/js/teacher.js"></script>
 </body>
 </html>
+
+

@@ -4,7 +4,7 @@ const BASE_URL = `http://127.0.0.1:${PORT}/api`;
 async function runTests() {
   console.log('--- Starting Integration Tests ---');
   try {
-    // 1. Register a student
+    
     console.log('1. Registering student...');
     const regStudentRes = await fetch(`${BASE_URL}/auth/register`, {
       method: 'POST',
@@ -22,7 +22,7 @@ async function runTests() {
     console.log('Student registered successfully.');
     const studentToken = regStudentData.token;
 
-    // 2. Register a teacher
+    
     console.log('2. Registering teacher...');
     const regTeacherRes = await fetch(`${BASE_URL}/auth/register`, {
       method: 'POST',
@@ -40,7 +40,7 @@ async function runTests() {
     console.log('Teacher registered successfully.');
     const teacherToken = regTeacherData.token;
 
-    // 3. Login student
+    
     console.log('3. Logging in student...');
     const loginRes = await fetch(`${BASE_URL}/auth/login`, {
       method: 'POST',
@@ -54,7 +54,7 @@ async function runTests() {
     if (!loginData.success) throw new Error(loginData.message);
     console.log('Student logged in successfully.');
 
-    // 4. Student uploads project
+    
     console.log('4. Student uploading project...');
     const uploadRes = await fetch(`${BASE_URL}/archive/upload`, {
       method: 'POST',
@@ -77,14 +77,13 @@ async function runTests() {
     console.log('Project uploaded successfully. ID:', uploadData.data._id);
     const projectId = uploadData.data._id;
 
-    // 5. Query projects as Guest (should be empty because it is Pending)
     console.log('5. Querying projects as Guest (should see 0)...');
     const guestQueryRes = await fetch(`${BASE_URL}/archive/documents`);
     const guestQueryData = await guestQueryRes.json();
     console.log('Guest saw projects count:', guestQueryData.data.length);
     if (guestQueryData.data.length !== 0) throw new Error('Guest should not see pending projects');
 
-    // 6. Query projects as Student (should see 1, because it returns reviewed + own uploads)
+    
     console.log('6. Querying projects as Student (should see 1)...');
     const studentQueryRes = await fetch(`${BASE_URL}/archive/documents`, {
       headers: { 'Authorization': `Bearer ${studentToken}` }
@@ -93,7 +92,7 @@ async function runTests() {
     console.log('Student saw projects count:', studentQueryData.data.length);
     if (studentQueryData.data.length !== 1) throw new Error('Student should see their own pending project');
 
-    // 7. Teacher reviews project
+    
     console.log('7. Teacher reviewing project...');
     const reviewRes = await fetch(`${BASE_URL}/archive/review/${projectId}`, {
       method: 'PUT',
@@ -110,7 +109,7 @@ async function runTests() {
     if (!reviewData.success) throw new Error(reviewData.message);
     console.log('Project reviewed successfully.');
 
-    // 8. Query projects as Guest again (should now see 1 because it is Reviewed)
+
     console.log('8. Querying projects as Guest again (should see 1)...');
     const guestQuery2Res = await fetch(`${BASE_URL}/archive/documents`);
     const guestQuery2Data = await guestQuery2Res.json();
